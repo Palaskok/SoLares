@@ -1,124 +1,118 @@
-import tkinter as tk
+from tkinter import *
 from tkinter import ttk
-from PIL import Image, ImageTk
 
-class SolarApp:
-    def __init__(self, master):
-        self.master = master
-        master.title("Solar App")
+# Crie a janela principal
+root = Tk()
+root.title("Monitoramento Placa Solar")
 
-        # Load images
-        self.solar_icon = Image.open("solar_icon.png")
-        self.solar_icon = ImageTk.PhotoImage(self.solar_icon)
-        self.rain_icon = Image.open("rain_icon.png")
-        self.rain_icon = ImageTk.PhotoImage(self.rain_icon)
+# Defina a cor de fundo da janela principal
+root.configure(bg="#ADD8E6")  # Azul claro
 
-        # Create menu bar
-        menubar = tk.Menu(master)
-        filemenu = tk.Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Exit", command=master.quit)
-        menubar.add_cascade(label="File", menu=filemenu)
-        master.config(menu=menubar)
+# Adicione o ícone da aplicação
+# root.iconbitmap("seu_icone.ico")  # Substitua "seu_icone.ico" pelo caminho do seu ícone
 
-        # Create location label
-        self.location_label = tk.Label(master, text="Feira de Santana - BA", font=("Helvetica", 14))
-        self.location_label.pack(pady=10)
+# Crie a barra de menu
+menubar = Menu(root)
 
-        # Create weather label
-        self.weather_label = tk.Label(master, text="27°C", font=("Helvetica", 14))
-        self.weather_label.pack()
+# Crie o menu "Arquivo"
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Sair", command=root.quit)
+menubar.add_cascade(label="Arquivo", menu=filemenu)
 
-        # Create battery frame
-        self.battery_frame = tk.Frame(master)
-        self.battery_frame.pack(pady=20)
+# Crie o menu "Ajuda"
+helpmenu = Menu(menubar, tearoff=0)
+helpmenu.add_command(label="Sobre", command=lambda: print("Sobre a aplicação..."))
+menubar.add_cascade(label="Ajuda", menu=helpmenu)
 
-        # Create battery label
-        self.battery_label = tk.Label(self.battery_frame, text="Battery", font=("Helvetica", 12))
-        self.battery_label.grid(row=0, column=0)
+# Exiba a barra de menu
+root.config(menu=menubar)
 
-        # Create battery icon
-        self.battery_icon = tk.Canvas(self.battery_frame, width=50, height=50)
-        self.battery_icon.grid(row=1, column=0, pady=10)
-        self.battery_icon.create_rectangle(10, 10, 40, 40, fill="green", outline="black", width=2)
+# Crie o frame para o cabeçalho
+header_frame = Frame(root, bg="#ADD8E6")
+header_frame.pack(side=TOP, fill=X)
 
-        # Create weather frame
-        self.weather_frame = tk.Frame(master)
-        self.weather_frame.pack()
+# Adicione o logotipo
+logo_label = Label(header_frame, text="SOLARES", font=("Arial", 14, "bold"), fg="white", bg="#007bff", padx=10, pady=5)
+logo_label.pack(side=LEFT)
 
-        # Create weather label
-        self.weather_label = tk.Label(self.weather_frame, text="Weather", font=("Helvetica", 12))
-        self.weather_label.grid(row=0, column=0)
+# Adicione o local
+location_label = Label(header_frame, text="Feira de Santana - BA", font=("Arial", 12), fg="black", bg="#ADD8E6", padx=10, pady=5)
+location_label.pack(side=LEFT)
 
-        # Create weather icon
-        self.weather_icon = tk.Label(self.weather_frame, image=self.rain_icon)
-        self.weather_icon.grid(row=1, column=0, pady=10)
+# Adicione a temperatura
+temp_label = Label(header_frame, text="27°C", font=("Arial", 12), fg="black", bg="#ADD8E6", padx=10, pady=5)
+temp_label.pack(side=RIGHT)
 
-        # Create solar panel frame
-        self.solar_frame = tk.Frame(master)
-        self.solar_frame.pack(pady=20)
+# Crie o frame para o conteúdo
+content_frame = Frame(root, bg="#ADD8E6")
+content_frame.pack(expand=True, fill=BOTH)
 
-        # Create solar panel label
-        self.solar_label = tk.Label(self.solar_frame, text="Monitoramento Placa Solar", font=("Helvetica", 12))
-        self.solar_label.pack()
+# Crie o frame esquerdo
+left_frame = Frame(content_frame, bg="#ADD8E6")
+left_frame.pack(side=LEFT, fill=Y, expand=False)
 
-        # Create solar panel options
-        self.options_frame = tk.Frame(self.solar_frame)
-        self.options_frame.pack()
+# Adicione o ícone da bateria
+battery_label = Label(left_frame, text="🔋", font=("Arial", 48), bg="#ADD8E6")
+battery_label.pack(pady=20)
 
-        # Create water icon
-        self.water_icon = tk.Button(self.options_frame, text="", image=self.rain_icon, command=self.show_water_status)
-        self.water_icon.grid(row=0, column=0, padx=5)
+# Adicione o indicador de nível de bateria
+battery_level = ttk.Progressbar(left_frame, orient="vertical", mode="determinate", length=100)
+battery_level.pack(pady=20)
 
-        # Create solar panel icon
-        self.solar_panel_icon = tk.Button(self.options_frame, text="", image=self.solar_icon, command=self.show_solar_panel_status)
-        self.solar_panel_icon.grid(row=0, column=1, padx=5)
+# Crie o frame direito
+right_frame = Frame(content_frame, bg="#ADD8E6")
+right_frame.pack(side=RIGHT, fill=Y, expand=False)
 
-        # Create empty icon
-        self.empty_icon = tk.Button(self.options_frame, text="", command=self.show_empty_status)
-        self.empty_icon.grid(row=0, column=2, padx=5)
+# Adicione o ícone do clima
+weather_label = Label(right_frame, text="🌧️", font=("Arial", 48), bg="#ADD8E6")
+weather_label.pack(pady=20)
 
-        # Create light bulb icon
-        self.light_bulb_icon = tk.Button(self.options_frame, text="", image=self.rain_icon, command=self.show_light_bulb_status)
-        self.light_bulb_icon.grid(row=0, column=3, padx=5)
+# Adicione o indicador de chuva
+rain_level = ttk.Progressbar(right_frame, orient="vertical", mode="determinate", length=100)
+rain_level.pack(pady=20)
 
-        # Create progress bar frame
-        self.progress_bar_frame = tk.Frame(self.solar_frame)
-        self.progress_bar_frame.pack(pady=10)
+# Crie o frame para a seção de monitoramento
+monitor_frame = Frame(content_frame, bg="#ADD8E6")
+monitor_frame.pack(expand=True, fill=BOTH)
 
-        # Create progress bar labels
-        self.progress_bar_labels = []
-        self.progress_bar_labels.append(tk.Label(self.progress_bar_frame, text="30%", font=("Helvetica", 10), fg="white", bg="blue"))
-        self.progress_bar_labels.append(tk.Label(self.progress_bar_frame, text="40%", font=("Helvetica", 10), fg="white", bg="blue"))
-        self.progress_bar_labels.append(tk.Label(self.progress_bar_frame, text="40%", font=("Helvetica", 10), fg="white", bg="blue"))
+# Adicione o título do monitoramento
+monitor_title = Label(monitor_frame, text="Monitoramento Placa Solar", font=("Arial", 16, "bold"), fg="black", bg="#ADD8E6", padx=10, pady=10)
+monitor_title.pack()
 
-        # Create progress bar labels
-        for i, label in enumerate(self.progress_bar_labels):
-            label.grid(row=0, column=i, padx=5)
+# Crie os botões de monitoramento
+monitor_buttons = [
+    ("💧", "Water", "#ADD8E6"),
+    ("🏠", "Solar Panel", "#ADD8E6"),
+    ("⚪", "Light", "#ADD8E6"),
+    ("💡", "Smart Bulb", "#ADD8E6")
+]
 
-        # Create progress bar
-        self.progress_bar = ttk.Progressbar(self.progress_bar_frame, orient="horizontal", length=200, mode="determinate")
-        self.progress_bar.grid(row=1, column=0, columnspan=3)
+for text, tooltip, bg_color in monitor_buttons:
+    button = Button(monitor_frame, text=text, font=("Arial", 12), fg="black", bg=bg_color, width=3, height=2, relief="flat", borderwidth=0, command=lambda t=tooltip: print(f"Ação para {t}"))
+    button.pack(side=LEFT, padx=10, pady=10)
 
-        # Create energy produced label
-        self.energy_label = tk.Label(self.solar_frame, text="Energia Produzida", font=("Helvetica", 12))
-        self.energy_label.pack(pady=10)
+# Crie o frame para os indicadores de energia
+energy_frame = Frame(monitor_frame, bg="#ADD8E6")
+energy_frame.pack(pady=10)
 
-    def show_water_status(self):
-        # Show water status
-        pass
+# Adicione os indicadores de energia
+energy_values = [
+    ("30%", "#ADD8E6"),
+    ("40°", "#ADD8E6"),
+    ("40°", "#ADD8E6"),
+]
 
-    def show_solar_panel_status(self):
-        # Show solar panel status
-        pass
+for value, bg_color in energy_values:
+    energy_label = Label(energy_frame, text=value, font=("Arial", 14, "bold"), fg="black", bg=bg_color, padx=10, pady=5, borderwidth=1, relief="solid")
+    energy_label.pack(side=LEFT, padx=5)
 
-    def show_empty_status(self):
-        # Show empty status
-        pass
+# Crie o frame para a energia produzida
+energy_produced_frame = Frame(root, bg="#ADD8E6")
+energy_produced_frame.pack(side=BOTTOM, fill=X)
 
-    def show_light_bulb_status(self):
-        # Show light bulb status
-        pass
+# Adicione o título da energia produzida
+energy_produced_title = Label(energy_produced_frame, text="Energia Produzida", font=("Arial", 12), fg="black", bg="#ADD8E6", padx=10, pady=5)
+energy_produced_title.pack()
 
-root = tk.Tk()
-app = SolarApp(root)
+# Exiba a janela
 root.mainloop()

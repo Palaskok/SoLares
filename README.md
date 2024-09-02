@@ -1,1 +1,1 @@
-Aplicativo da SoLares
+Solares
