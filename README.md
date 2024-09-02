@@ -1,3 +1,3 @@
 SoLares
 
-aplicativo
+aplicativo leu e ggay
